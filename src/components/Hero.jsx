@@ -13,22 +13,22 @@ const Hero = () => {
           </h1>
           <p className="text-2xl text-center py-6  italic mt-4">
             Improve your development skills by training with your peers on
-            assessments that include code kata, quizzes, and prose that
-            continuously challenge and push your coding practice
+            assessments that include assignments, quizzes, and prose that
+            continuously challenge and push your  knowledge to the next level
           </p>
 
           <div className="flex flex-col md:flex-row justify-between items-center mt-6">
             <div className="mt-4 md:mt-0 md:mr-4">
               <h1 className="text-center">Teachers</h1>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 md:mt-0">
-                <Link to="#login">Login</Link>
+                <Link to="/login">Login</Link>
               </button>
             </div>
 
             <div className="mt-4 md:mt-0">
               <h1 className="text-center">Students</h1>
               <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 md:mt-0">
-                <Link to="#login">Login</Link>
+                <Link to="/signup">Login</Link>
               </button>
             </div>
           </div>
