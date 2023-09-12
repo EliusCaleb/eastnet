@@ -1,8 +1,51 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React,{useState} from "react";
+import { Link, useNavigate} from "react-router-dom";
+
 import { FaComment } from "react-icons/fa";
 
 const Signup = () => {
+  const navigate = useNavigate()
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    password_confirmation: "",
+  });
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:3000/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user: formData
+          
+        }),
+      });
+      const data = await response.json();
+      if (response.ok && data.status1.code===200 ) {
+        console.log(response.headers.get("Authorization"));
+        localStorage.setItem("token", response.headers.get("Authorization"));
+        navigate('/login');
+      } else if (response.ok && data.status1.code === 422) {
+        setError('Invalid  email or password(7 charaters)');
+        console.log('error',data.status2)
+      } else {
+        setError('An error occurred during registration.');
+        throw new Error(`HTTP Error: ${data.status1.code}`);
+      }
+    } catch (error) {
+      console.error('Error registering user:', error);
+      setError('An error occurred during registration.');
+    }
+  };
+
+  
   return (
     <div className="bg-primary w-full overflow-hidden">
       <div className={`sm:px-16 px-6 flex justify-center items-center`}>
@@ -26,7 +69,8 @@ const Signup = () => {
                 </Link>
               </div>
               <div className="w-full px-6 py-4 mt-6 overflow-hidden bg-white shadow-md sm:max-w-md sm:rounded-lg">
-                <form>
+              {error && <div className="error text-red-500 italic m-4 p-4">{error}</div>}
+                <form onSubmit={handleSubmit}>
                   <div>
                     <label
                       htmlFor="name"
@@ -40,6 +84,8 @@ const Signup = () => {
                         name="name"
                         className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                         placeholder="Caleb.."
+                        value={formData.name} 
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })} 
                       />
                     </div>
                   </div>
@@ -54,6 +100,8 @@ const Signup = () => {
                       <input
                         type="email"
                         name="email"
+                        value={formData.email}
+                         onChange={(e) => setFormData({ ...formData, email: e.target.value })} 
                         className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                       />
                     </div>
@@ -69,6 +117,9 @@ const Signup = () => {
                       <input
                         type="password"
                         name="password"
+                        placeholder="zawdc@#42.."
+                        value={formData.password} 
+                        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                         className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                       />
                     </div>
@@ -83,7 +134,10 @@ const Signup = () => {
                     <div className="flex flex-col items-start">
                       <input
                         type="password"
+                        placeholder="zawdc@#42.."
                         name="password_confirmation"
+                        value={formData.password_confirmation}
+                        onChange={(e) => setFormData({ ...formData, password_confirmation: e.target.value })}
                         className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                       />
                     </div>
@@ -91,7 +145,7 @@ const Signup = () => {
                   <div className="flex items-center justify-end mt-4">
                     <Link
                       className="text-sm text-gray-600 underline hover:text-gray-900"
-                      to="/login"
+                      to="/about"
                     >
                       Already registered?
                     </Link>
