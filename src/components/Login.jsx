@@ -20,27 +20,39 @@ const Login = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
 
+    
+
     try {
       const response = await fetch("http://localhost:3000/users/sign_in", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: localStorage.getItem("token"),
+          
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({user:{
+           email,
+           password
+        } }),
       });
-      console.log('1',response)
+      console.log("1", response);
+      console.log("token",response.headers.entries)
+      console.log("tokenn",response.headers.has("Authorization"));
+      //const responseText = await response.text();
+      //console.log("Response Content:", responseText);
       const data = await response.json();
+      console.log("data", data);
+
       if (response.ok) {
         console.log(response.headers.get("Authorization"));
-        console.log('1234',localStorage.getItem(Token))
+        localStorage.setItem("token", response.headers.get("Authorization"));
+        console.log("1234", localStorage.getItem(Token));
         localStorage.getItem("token", response.headers.get("Authorization"));
-        console.log('12',data)
-        
+        console.log("12", data);
+
         navigate("/about");
       } else {
         setError("Invalid email or password");
-        console.log("error", error);
+        //console.log("error", error);
       }
     } catch (error) {
       console.error("Error logging in:", error);
@@ -69,7 +81,7 @@ const Login = () => {
                       className="mb-6"
                       size="lg"
                       value={email}
-                      onChange={handleEmailChange} // Add this onChange handler
+                      onChange={handleEmailChange}
                     />
                     <br />
 
@@ -82,7 +94,7 @@ const Login = () => {
                       className="mb-6"
                       size="lg"
                       value={password}
-                      onChange={handlePasswordChange} // Add this onChange handler
+                      onChange={handlePasswordChange}
                     />
 
                     {/* <!-- Login button --> */}
